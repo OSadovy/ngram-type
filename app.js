@@ -143,6 +143,12 @@ var ngramTypeConfig = {
                     that.announceNextToken(true);
                 }
             }
+            else if (key == 'Enter' || key == 'NumpadEnter') {
+                e.preventDefault();
+                var typed = that.typedPhrase.trimStart();
+                var index = currentTokenIndex(that.expectedPhrase, typed);
+                announce(spelledToken(that.expectedPhrase.split(' ')[index]));
+            }
         });
         $('#input-typing').on('focus', function() {
             that.announceNextToken(true);
