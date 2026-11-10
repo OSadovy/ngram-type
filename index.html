@@ -171,17 +171,11 @@
                             value="custom_words"
                             v-model="data.source"
                         >
-                        <label class="custom-control-label" for="custom_words">
-                        <a
-                            href="#"
-                            data-toggle="modal"
-                            data-target="#custom-words-modal"
-                            :click="customWordsModalShow"
-                        >
-                            Custom
-                        </a>
-                        </label>
+                        <label class="custom-control-label" for="custom_words">Custom</label>
                     </div>
+                    <button type="button" class="btn btn-link btn-sm p-0" data-toggle="modal" data-target="#custom-words-modal">
+                        Edit custom words
+                    </button>
                 </div>
             </fieldset>
             <fieldset class="settings-module col-xl-2 col-lg-2 col-md-2 col-sm-4 col-xs-12">
@@ -245,35 +239,36 @@
             <fieldset class="settings-module col-xl-2 col-lg-2 col-md-3 col-sm-4 col-xs-12">
                 <legend>Generator</legend>
                 <div class="form-group">
-                    <label class="col-form-label col-form-label-sm">Combination</label>
-                    <input v-model.number="data[data['source']].combination" v-on:change="refreshPhrases"
+                    <label class="col-form-label col-form-label-sm" for="combination">Combination</label>
+                    <input id="combination" v-model.number="data[data['source']].combination" v-on:change="refreshPhrases"
                         class="form-control form-control-sm" type="number" min="1">
-                    <label class="col-form-label col-form-label-sm">Repetition</label>
-                    <input v-model.number="data[data['source']].repetition" v-on:change="refreshPhrases"
+                    <label class="col-form-label col-form-label-sm" for="repetition">Repetition</label>
+                    <input id="repetition" v-model.number="data[data['source']].repetition" v-on:change="refreshPhrases"
                         class="form-control form-control-sm" type="number" min="1">
                 </div>
             </fieldset>
             <fieldset class="settings-module col-xl-2 col-lg-2 col-md-3 col-sm-4 col-xs-12">
                 <legend>Threshold</legend>
                 <div class="form-group">
-                    <label class="col-form-label col-form-label-sm">WPM</label>
-                    <input v-model.number="data[data['source']].minimumWPM" v-on:change="save"
+                    <label class="col-form-label col-form-label-sm" for="minimum-wpm">WPM</label>
+                    <input id="minimum-wpm" v-model.number="data[data['source']].minimumWPM" v-on:change="save"
                         class="form-control form-control-sm" type="number" min="1" max="500">
-                    <label class="col-form-label col-form-label-sm">Accuracy</label>
-                    <input v-model.number="data[data['source']].minimumAccuracy" class="form-control form-control-sm"
+                    <label class="col-form-label col-form-label-sm" for="minimum-accuracy">Accuracy</label>
+                    <input id="minimum-accuracy" v-model.number="data[data['source']].minimumAccuracy" class="form-control form-control-sm"
                         type="number" min="1" max="100" v-on:change="save">
                 </div>
             </fieldset>
         </div>
 
         <!-- Modal for the custom texts. -->
-        <div id="custom-words-modal" class="modal fade" role="dialog">
+        <div id="custom-words-modal" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="custom-words-modal--title">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
+                        <h5 id="custom-words-modal--title" class="modal-title">Custom words</h5>
                     </div>
                     <div class="modal-body">
-                        <p>Put the custom words here, separated by spaces/newlines.</p>
+                        <label for="custom-words-modal--text-area">Put the custom words here, separated by spaces/newlines.</label>
                         <textarea id="custom-words-modal--text-area" rows="10" class="w-100">
                             </textarea>
                     </div>
@@ -317,7 +312,7 @@
                     Lesson {{ data[data['source']].phrasesCurrentIndex + 1 }} / {{ data[data['source']].phrases.length }}
                 </h4>
                 <h4 v-show="!data[data['source']].phrases.length">
-                    Click the "Custom" link to input words.
+                    Use "Edit custom words" to input words.
                 </h4>
             </div>
             <div class="expected-phrase word text-white bg-primary mb-3">

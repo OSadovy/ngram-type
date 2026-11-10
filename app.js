@@ -148,6 +148,14 @@ var ngramTypeConfig = {
             that.announceNextToken(true);
         });
 
+        $('#custom-words-modal')
+            .on('show.bs.modal', function() {
+                that.customWordsModalShow();
+            })
+            .on('shown.bs.modal', function() {
+                $(this).find('textarea').trigger('focus');
+            });
+
         // One watcher for both, so a new phrase replacing the typed one
         // announces its first token once.
         this.announcedIndex = -1;
@@ -438,7 +446,7 @@ var ngramTypeConfig = {
         },
         customWordsModalShow: function() {
             var $customWordsModal = $('#custom-words-modal');
-            var customWords = this.custom_words.join('\n')
+            var customWords = (this.custom_words || []).join('\n')
             $customWordsModal.find('textarea').val(customWords);
         },
         customWordsModalSubmit: function() {
