@@ -135,9 +135,31 @@ var ngramTypeConfig = {
             var key = e.originalEvent.code;
             if (key == 'Tab' || key == 'Escape') {
                 e.preventDefault();
+                // Resetting an empty field changes nothing the watcher sees,
+                // so repeat the first token here.
+                var wasEmpty = !that.typedPhrase.trimStart().length;
                 that.resetCurrentPhraseMetrics();
+                if (wasEmpty) {
+                    that.announceNextToken(true);
+                }
             }
         });
+        $('#input-typing').on('focus', function() {
+            that.announceNextToken(true);
+        });
+
+        // One watcher for both, so a new phrase replacing the typed one
+        // announces its first token once.
+        this.announcedIndex = -1;
+        this.$watch(
+            function() { return [this.expectedPhrase, this.typedPhrase.trimStart()]; },
+            function(now, before) {
+                if (!now[1].length || now[0] !== before[0]) {
+                    this.announcedIndex = -1;
+                }
+                this.announceNextToken(false);
+            }
+        );
 
         this.correctLetterSound = new Audio('./media/sounds/click.mp3');
         this.incorrectLetterSound = new Audio('./media/sounds/clack.mp3');
@@ -378,6 +400,21 @@ var ngramTypeConfig = {
                 this.pauseTimer()
                 this.nextPhrase();
             }
+        },
+        announceNextToken: function(repeat) {
+            // Settings changes also replace the phrase; stay quiet until
+            // the typist is back in the field.
+            if (document.activeElement.id !== 'input-typing') {
+                return;
+            }
+
+            var index = nextTokenIndex(this.expectedPhrase, this.typedPhrase.trimStart());
+            if (index < 0 || (index <= this.announcedIndex && !repeat)) {
+                return;
+            }
+
+            announce(this.expectedPhrase.split(' ')[index]);
+            this.announcedIndex = index;
         },
         resetCurrentPhraseMetrics: function() {
             this.hitsCorrect = 0;
